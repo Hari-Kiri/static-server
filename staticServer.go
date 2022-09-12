@@ -31,7 +31,7 @@ func main() {
 	// Handle test page (its just for testing webserver online or not) request
 	goalMakeHandler.HandleRequest(testHandler, "/test")
 	// Handle pokemon page request
-	goalMakeHandler.HandleRequest(pokemonHandler, "/index")
+	goalMakeHandler.HandleRequest(indexHandler, "/index")
 	// // Handle catching request
 	// goalMakeHandler.HandleRequest(catchHandler, "/pokemon/catch")
 	// // Handle catching request
@@ -64,7 +64,7 @@ func testHandler(responseWriter http.ResponseWriter, request *http.Request) {
 }
 
 // Pokemon page handler
-func pokemonHandler(responseWriter http.ResponseWriter, request *http.Request) {
+func indexHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	// Load application settings data
 	appSettings, error := goalApplicationSettingsLoader.LoadSettings()
 	// If load application settings data return error handle it
