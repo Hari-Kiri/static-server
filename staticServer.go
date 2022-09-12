@@ -63,7 +63,7 @@ func testHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	log.Println("[info] Serving test page [", request.URL.Path, "]")
 }
 
-// Pokemon page handler
+// Index page handler
 func indexHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	// Load application settings data
 	appSettings, error := goalApplicationSettingsLoader.LoadSettings()
