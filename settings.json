@@ -1,0 +1,15 @@
+{
+    "settings": {
+        "name": "Static Web Server",
+        "port": 80,
+        "organisation": "PT Trinusa Network",
+        "version": "1.0"
+    },
+    "databaseConfiguration": {
+        "user": "root",
+        "password": "",
+        "connectionType": "tcp",
+        "hostname": "localhost",
+        "databaseName": "mydb"
+    }
+}
