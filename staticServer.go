@@ -30,23 +30,29 @@ func main() {
 	goalMakeHandler.HandleRequest(rootHandler, "/")
 	// Handle test page (its just for testing webserver online or not) request
 	goalMakeHandler.HandleRequest(testHandler, "/test")
-	// Handle pokemon page request
-	goalMakeHandler.HandleRequest(indexHandler, "/index")
-	// // Handle catching request
-	// goalMakeHandler.HandleRequest(catchHandler, "/pokemon/catch")
-	// // Handle catching request
-	// goalMakeHandler.HandleRequest(getNickNameHandler, "/pokemon/getnickname")
-	// // Handle prime request
-	// goalMakeHandler.HandleRequest(releaseHandler, "/pokemon/release")
 	// Run HTTP server
 	goalMakeHandler.Serve(loadApplicationSettings.Settings.Name, loadApplicationSettings.Settings.Port)
 }
 
-// Web root handler
+// Index page handler
 func rootHandler(responseWriter http.ResponseWriter, request *http.Request) {
-	// Redirect to home page
-	http.Redirect(responseWriter, request, "/index", http.StatusFound)
-	log.Println("[info] Webroot redirect to url path [ /index ], requested from", request.RemoteAddr)
+	// Load application settings data
+	appSettings, error := goalApplicationSettingsLoader.LoadSettings()
+	// If load application settings data return error handle it
+	if error != nil {
+		// Http error response
+		errorResponse, _ := goalJson.JsonEncode(map[string]interface{}{
+			"response": false,
+			"code":     500,
+			"message":  "page failed to serve"},
+			false)
+		// Give 500 response code
+		http.Error(responseWriter, errorResponse, http.StatusInternalServerError)
+		log.Println("[error rootHandler()] Error opening application settings file: " + error.Error())
+		return
+	}
+	// Open home page
+	goalRenderTemplate.Process(htmlTemplates, responseWriter, "index", appSettings, request)
 }
 
 // Test page handler
@@ -61,25 +67,4 @@ func testHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.Header().Set("Content-Type", "application/json")
 	responseWriter.Write([]byte(okResponse))
 	log.Println("[info] Serving test page [", request.URL.Path, "]")
-}
-
-// Index page handler
-func indexHandler(responseWriter http.ResponseWriter, request *http.Request) {
-	// Load application settings data
-	appSettings, error := goalApplicationSettingsLoader.LoadSettings()
-	// If load application settings data return error handle it
-	if error != nil {
-		// Http error response
-		errorResponse, _ := goalJson.JsonEncode(map[string]interface{}{
-			"response": false,
-			"code":     500,
-			"message":  "page failed to serve"},
-			false)
-		// Give 500 response code
-		http.Error(responseWriter, errorResponse, http.StatusInternalServerError)
-		log.Println("[error adminHandler()] Error opening application settings file: " + error.Error())
-		return
-	}
-	// Open home page
-	goalRenderTemplate.Process(htmlTemplates, responseWriter, "index", appSettings, request)
 }
