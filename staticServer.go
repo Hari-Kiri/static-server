@@ -30,12 +30,21 @@ func main() {
 	goalMakeHandler.HandleRequest(rootHandler, "/")
 	// Handle test page (its just for testing webserver online or not) request
 	goalMakeHandler.HandleRequest(testHandler, "/test")
+	// Handle index page
+	goalMakeHandler.HandleRequest(indexHandler, "/index")
 	// Run HTTP server
 	goalMakeHandler.Serve(loadApplicationSettings.Settings.Name, loadApplicationSettings.Settings.Port)
 }
 
-// Index page handler
+// Web root handler
 func rootHandler(responseWriter http.ResponseWriter, request *http.Request) {
+	// Redirect to home page
+	http.Redirect(responseWriter, request, "/index", http.StatusFound)
+	log.Println("[info] Webroot redirect to url path [ /index ], requested from", request.RemoteAddr)
+}
+
+// Index page handler
+func indexHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	// Load application settings data
 	appSettings, error := goalApplicationSettingsLoader.LoadSettings()
 	// If load application settings data return error handle it
