@@ -17,13 +17,14 @@ var htmlTemplates = template.Must(template.ParseFiles("./html/index.html"))
 // Function constructor
 func main() {
 	// Load application settings parameter
-	temboLog.InfoLogging("Starting webserver!")
-	loadApplicationSettings, error := goalApplicationSettingsLoader.LoadSettings()
+	loadApplicationSettings, errorLoadApplicationSettings := goalApplicationSettingsLoader.LoadSettings()
 	// If load application settings parameter return error handle it
-	if error != nil {
-		temboLog.FatalLogging("Error opening application settings file", error.Error())
+	if errorLoadApplicationSettings != nil {
+		temboLog.FatalLogging("Error opening application settings file", errorLoadApplicationSettings.Error())
 		return
 	}
+	temboLog.InfoLogging("Starting", loadApplicationSettings.Settings.Name, "version", loadApplicationSettings.Settings.Version)
+	temboLog.InfoLogging("Build and provided by:", loadApplicationSettings.Settings.Organisation)
 	// Handle web application user interface components request
 	goalMakeHandler.HandleFileRequest("/html/", "./html")
 	// Handle web root request
