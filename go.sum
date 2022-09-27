@@ -6,3 +6,5 @@ github.com/Hari-Kiri/goalMakeHandler v0.1.2 h1:CexOXLsF0tkeVLj3L+9jt499BmybkRFtl
 github.com/Hari-Kiri/goalMakeHandler v0.1.2/go.mod h1:XNPc6tnSWtOuXrUt4w1wZ24rd4Mp/DF+4KZHYF/j18A=
 github.com/Hari-Kiri/goalRenderTemplate v0.1.0 h1:E/e8N5SXlX6JOHKfyZF/zlGFnEQcenea4a8X6SC6+/U=
 github.com/Hari-Kiri/goalRenderTemplate v0.1.0/go.mod h1:EWa1nqsxUrJmie+X0/Hdyu9pHXmw8zXjzLy7p7LN5iI=
+github.com/Hari-Kiri/temboLog v0.1.3 h1:B38Sfv5IbClT96r+gZg8vay2WTzVWsFwoodkbDa3b+A=
+github.com/Hari-Kiri/temboLog v0.1.3/go.mod h1:UtbAKK/Aw/eNQLA8Gp2S+K9JH0u9bD3JaAmNNgzs6Fs=

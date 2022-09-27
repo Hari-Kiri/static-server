@@ -2,13 +2,13 @@ package main
 
 import (
 	"html/template"
-	"log"
 	"net/http"
 
 	"github.com/Hari-Kiri/goalApplicationSettingsLoader"
 	"github.com/Hari-Kiri/goalJson"
 	"github.com/Hari-Kiri/goalMakeHandler"
 	"github.com/Hari-Kiri/goalRenderTemplate"
+	"github.com/Hari-Kiri/temboLog"
 )
 
 // HTML parser
@@ -17,11 +17,11 @@ var htmlTemplates = template.Must(template.ParseFiles("./html/index.html"))
 // Function constructor
 func main() {
 	// Load application settings parameter
-	log.Println("[info] Starting webserver!")
+	temboLog.InfoLogging("Starting webserver!")
 	loadApplicationSettings, error := goalApplicationSettingsLoader.LoadSettings()
 	// If load application settings parameter return error handle it
 	if error != nil {
-		log.Fatal("[error main()] Error opening application settings file: " + error.Error())
+		temboLog.FatalLogging("Error opening application settings file", error.Error())
 		return
 	}
 	// Handle web application user interface components request
@@ -40,7 +40,7 @@ func main() {
 func rootHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	// Redirect to home page
 	http.Redirect(responseWriter, request, "/index", http.StatusFound)
-	log.Println("[info] Webroot redirect to url path [ /index ], requested from", request.RemoteAddr)
+	temboLog.InfoLogging("Webroot redirect to url path [ /index ], requested from", request.RemoteAddr)
 }
 
 // Index page handler
@@ -57,7 +57,7 @@ func indexHandler(responseWriter http.ResponseWriter, request *http.Request) {
 			false)
 		// Give 500 response code
 		http.Error(responseWriter, errorResponse, http.StatusInternalServerError)
-		log.Println("[error rootHandler()] Error opening application settings file: " + error.Error())
+		temboLog.ErrorLogging("Error opening application settings file:", error.Error())
 		return
 	}
 	// Open home page
@@ -75,5 +75,5 @@ func testHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	responseWriter.WriteHeader(http.StatusOK)
 	responseWriter.Header().Set("Content-Type", "application/json")
 	responseWriter.Write([]byte(okResponse))
-	log.Println("[info] Serving test page [", request.URL.Path, "]")
+	temboLog.InfoLogging("Serving test page [", request.URL.Path, "]")
 }
