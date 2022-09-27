@@ -1,4 +1,4 @@
-module staticServer
+module github.com/Hari-Kiri/staticServer
 
 go 1.19
 
