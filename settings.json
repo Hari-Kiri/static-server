@@ -3,6 +3,6 @@
         "name": "Static Web Server",
         "port": 80,
         "organisation": "PT Trinusa Network",
-        "version": "0.1.3"
+        "version": "0.1.5"
     }
 }
