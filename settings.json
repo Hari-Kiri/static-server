@@ -4,5 +4,8 @@
         "port": 80,
         "organisation": "PT Trinusa Network",
         "version": "0.1.5"
+    },
+    "staticServer": {
+        "uri": "cargo"
     }
 }

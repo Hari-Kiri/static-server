@@ -14,6 +14,8 @@ import (
 // HTML parser
 var htmlTemplates = template.Must(template.ParseFiles("./html/index.html"))
 
+var uriName string
+
 // Function constructor
 func main() {
 	// Load application settings parameter
@@ -23,6 +25,14 @@ func main() {
 		temboLog.FatalLogging("Error opening application settings file", errorLoadApplicationSettings.Error())
 		return
 	}
+	// Load static server settings parameter
+	loadStaticServerSettings, errorLoadStaticServerSettings := goalApplicationSettingsLoader.LoadStaticServerConfiguration()
+	// If load static server settings parameter return error handle it
+	if errorLoadStaticServerSettings != nil {
+		temboLog.FatalLogging("Error opening application settings file", errorLoadStaticServerSettings.Error())
+		return
+	}
+	uriName = loadStaticServerSettings.StaticServer.Uri
 	temboLog.InfoLogging("Starting", loadApplicationSettings.Settings.Name, "version", loadApplicationSettings.Settings.Version)
 	temboLog.InfoLogging("Build and provided by:", loadApplicationSettings.Settings.Organisation)
 	// Handle web application user interface components request
@@ -32,7 +42,7 @@ func main() {
 	// Handle test page (its just for testing webserver online or not) request
 	goalMakeHandler.HandleRequest(testHandler, "/test")
 	// Handle index page
-	goalMakeHandler.HandleRequest(indexHandler, "/index")
+	goalMakeHandler.HandleRequest(indexHandler, "/"+uriName)
 	// Run HTTP server
 	goalMakeHandler.Serve(loadApplicationSettings.Settings.Name, loadApplicationSettings.Settings.Port)
 }
@@ -40,8 +50,8 @@ func main() {
 // Web root handler
 func rootHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	// Redirect to home page
-	http.Redirect(responseWriter, request, "/index", http.StatusFound)
-	temboLog.InfoLogging("Webroot redirect to url path [ /index ], requested from", request.RemoteAddr)
+	http.Redirect(responseWriter, request, "/"+uriName, http.StatusFound)
+	temboLog.InfoLogging("Webroot redirect to url path [ /", uriName, " ], requested from", request.RemoteAddr)
 }
 
 // Index page handler
