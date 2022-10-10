@@ -38,20 +38,11 @@ func main() {
 	// Handle web application user interface components request
 	goalMakeHandler.HandleFileRequest("/html/", "./html")
 	// Handle web root request
-	goalMakeHandler.HandleRequest(rootHandler, "/")
+	goalMakeHandler.HandleRequest(indexHandler, "/")
 	// Handle test page (its just for testing webserver online or not) request
 	goalMakeHandler.HandleRequest(testHandler, "/test")
-	// Handle index page
-	goalMakeHandler.HandleRequest(indexHandler, "/"+uriName)
 	// Run HTTP server
 	goalMakeHandler.Serve(loadApplicationSettings.Settings.Name, loadApplicationSettings.Settings.Port)
-}
-
-// Web root handler
-func rootHandler(responseWriter http.ResponseWriter, request *http.Request) {
-	// Redirect to home page
-	http.Redirect(responseWriter, request, "/"+uriName, http.StatusFound)
-	temboLog.InfoLogging("Webroot redirect to url path [ /", uriName, " ], requested from", request.RemoteAddr)
 }
 
 // Index page handler
