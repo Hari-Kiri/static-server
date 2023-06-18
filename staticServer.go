@@ -26,12 +26,12 @@ func main() {
 		return
 	}
 	// Load static server settings parameter
-	_, errorLoadStaticServerSettings := goalApplicationSettingsLoader.LoadStaticServerConfiguration()
-	// If load static server settings parameter return error handle it
-	if errorLoadStaticServerSettings != nil {
-		temboLog.FatalLogging("Error opening application settings file", errorLoadStaticServerSettings.Error())
-		return
-	}
+	// loadStaticServerSettings, errorLoadStaticServerSettings := goalApplicationSettingsLoader.LoadStaticServerConfiguration()
+	// // If load static server settings parameter return error handle it
+	// if errorLoadStaticServerSettings != nil {
+	// 	temboLog.FatalLogging("Error opening application settings file", errorLoadStaticServerSettings.Error())
+	// 	return
+	// }
 	// uriName = loadStaticServerSettings.StaticServer.Uri
 	temboLog.InfoLogging("Starting", loadApplicationSettings.Settings.Name, "version", loadApplicationSettings.Settings.Version)
 	temboLog.InfoLogging("Build and provided by:", loadApplicationSettings.Settings.Organisation)
