@@ -14,7 +14,7 @@ import (
 // HTML parser
 var htmlTemplates = template.Must(template.ParseFiles("./html/index.html"))
 
-var uriName string
+// var uriName string
 
 // Function constructor
 func main() {
@@ -26,17 +26,19 @@ func main() {
 		return
 	}
 	// Load static server settings parameter
-	loadStaticServerSettings, errorLoadStaticServerSettings := goalApplicationSettingsLoader.LoadStaticServerConfiguration()
+	_, errorLoadStaticServerSettings := goalApplicationSettingsLoader.LoadStaticServerConfiguration()
 	// If load static server settings parameter return error handle it
 	if errorLoadStaticServerSettings != nil {
 		temboLog.FatalLogging("Error opening application settings file", errorLoadStaticServerSettings.Error())
 		return
 	}
-	uriName = loadStaticServerSettings.StaticServer.Uri
+	// uriName = loadStaticServerSettings.StaticServer.Uri
 	temboLog.InfoLogging("Starting", loadApplicationSettings.Settings.Name, "version", loadApplicationSettings.Settings.Version)
 	temboLog.InfoLogging("Build and provided by:", loadApplicationSettings.Settings.Organisation)
 	// Handle web application user interface components request
 	goalMakeHandler.HandleFileRequest("/html/", "./html")
+	// Handle .well-known folder
+	goalMakeHandler.HandleFileRequest("/.well-known", "./html/.well-known")
 	// Handle web root request
 	goalMakeHandler.HandleRequest(indexHandler, "/")
 	// Handle test page (its just for testing webserver online or not) request
