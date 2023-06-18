@@ -38,7 +38,7 @@ func main() {
 	// Handle web application user interface components request
 	goalMakeHandler.HandleFileRequest("/html/", "./html")
 	// Handle .well-known folder
-	goalMakeHandler.HandleFileRequest("/.well-known", "./html/.well-known")
+	goalMakeHandler.HandleFileRequest("/.well-known/", "./.well-known")
 	// Handle web root request
 	goalMakeHandler.HandleRequest(indexHandler, "/")
 	// Handle test page (its just for testing webserver online or not) request
