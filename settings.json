@@ -1,11 +1,7 @@
 {
     "settings": {
         "name": "Static Web Server",
-        "port": 80,
-        "organisation": "PT Trinusa Network",
-        "version": "0.1.5"
-    },
-    "staticServer": {
-        "uri": "index"
+        "port": 8000,
+        "organisation": "My Company"
     }
 }
