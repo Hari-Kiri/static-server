@@ -1,20 +1,15 @@
 package main
 
 import (
-	"html/template"
+	"io/fs"
 	"net/http"
+	"os"
 
 	"github.com/Hari-Kiri/goalApplicationSettingsLoader"
 	"github.com/Hari-Kiri/goalJson"
 	"github.com/Hari-Kiri/goalMakeHandler"
-	"github.com/Hari-Kiri/goalRenderTemplate"
 	"github.com/Hari-Kiri/temboLog"
 )
-
-// HTML parser
-var htmlTemplates = template.Must(template.ParseFiles("./html/index.html"))
-
-// var uriName string
 
 // Function constructor
 func main() {
@@ -25,47 +20,34 @@ func main() {
 		temboLog.FatalLogging("Error opening application settings file", errorLoadApplicationSettings.Error())
 		return
 	}
-	// Load static server settings parameter
-	// loadStaticServerSettings, errorLoadStaticServerSettings := goalApplicationSettingsLoader.LoadStaticServerConfiguration()
-	// // If load static server settings parameter return error handle it
-	// if errorLoadStaticServerSettings != nil {
-	// 	temboLog.FatalLogging("Error opening application settings file", errorLoadStaticServerSettings.Error())
-	// 	return
-	// }
-	// uriName = loadStaticServerSettings.StaticServer.Uri
-	temboLog.InfoLogging("Starting", loadApplicationSettings.Settings.Name, "version", loadApplicationSettings.Settings.Version)
+	temboLog.InfoLogging("Starting", loadApplicationSettings.Settings.Name)
 	temboLog.InfoLogging("Build and provided by:", loadApplicationSettings.Settings.Organisation)
-	// Handle web application user interface components request
-	goalMakeHandler.HandleFileRequest("/html/", "./html")
-	// Handle .well-known folder
-	goalMakeHandler.HandleFileRequest("/.well-known/", "./.well-known")
-	// Handle web root request
-	goalMakeHandler.HandleRequest(indexHandler, "/")
+	goalMakeHandler.HandleFileRequest("/", ",/")
+	// List directory
+	readDirectory, errorReadDir := os.ReadDir("./")
+	if errorReadDir != nil {
+		temboLog.FatalLogging("failed listing directory, error: ", errorReadDir)
+	}
+	// Handle directory request
+	for i := 0; i < len(readDirectory); i++ {
+		directoryHandler(readDirectory[i])
+	}
 	// Handle test page (its just for testing webserver online or not) request
 	goalMakeHandler.HandleRequest(testHandler, "/test")
 	// Run HTTP server
 	goalMakeHandler.Serve(loadApplicationSettings.Settings.Name, loadApplicationSettings.Settings.Port)
 }
 
-// Index page handler
-func indexHandler(responseWriter http.ResponseWriter, request *http.Request) {
-	// Load application settings data
-	appSettings, error := goalApplicationSettingsLoader.LoadSettings()
-	// If load application settings data return error handle it
-	if error != nil {
-		// Http error response
-		errorResponse, _ := goalJson.JsonEncode(map[string]interface{}{
-			"response": false,
-			"code":     500,
-			"message":  "page failed to serve"},
-			false)
-		// Give 500 response code
-		http.Error(responseWriter, errorResponse, http.StatusInternalServerError)
-		temboLog.ErrorLogging("Error opening application settings file:", error.Error())
-		return
+func directoryHandler(directoryReadResult fs.DirEntry) {
+	if directoryReadResult.IsDir() {
+		http.HandleFunc("/"+directoryReadResult.Name()+"/", serveFiles)
 	}
-	// Open home page
-	goalRenderTemplate.Process(htmlTemplates, responseWriter, "index", appSettings, request)
+}
+
+func serveFiles(responseWriter http.ResponseWriter, request *http.Request) {
+	name := "." + request.URL.Path
+	temboLog.InfoLogging("serving:", name[1:])
+	http.ServeFile(responseWriter, request, name)
 }
 
 // Test page handler
